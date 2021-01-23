@@ -188,8 +188,8 @@ def cf_script(batch,
                 "--fid-Om {} --fid-Or {} \n".format(fid_om, fid_or))
 
         batch_filename = out_dir + "/" + out.replace(".fits", ".batch")
-        batch.cf_script_list.append(basename(batch_filename))
-        batch.export_script_list.append(basename(exp_batch))
+        batch.cf_script.append(basename(batch_filename))
+        batch.export_script.append(basename(exp_batch))
 
         file = open(batch_filename, "w")
         file.write(srun)
@@ -236,7 +236,7 @@ def dmat_script(batch,
                 "--out {}/{} --rej {} ".format(out_dir, out, reject) +
                 "--nproc 32  --fid-Om {} --fid-Or {}\n".format(fid_om, fid_or))
         batch_filename = out_dir + "/" + out.replace(".fits", ".batch")
-        batch.dmat_script_list.append(basename(batch_filename))
+        batch.dmat_script.append(basename(batch_filename))
 
         file = open(batch_filename, "w")
         file.write(srun)
@@ -295,8 +295,8 @@ def xcf_script(batch,
                 "--out {}/{} --nproc 32 ".format(out_dir, out) +
                 "--fid-Om {} --fid-Or {}\n".format(fid_om, fid_or))
         batch_filename = out_dir + "/" + out.replace(".fits", ".batch")
-        batch.xcf_script_list.append(basename(batch_filename))
-        batch.xexport_script_list.append(basename(exp_batch))
+        batch.xcf_script.append(basename(batch_filename))
+        batch.xexport_script.append(basename(exp_batch))
 
         file = open(batch_filename, "w")
         file.write(srun)
@@ -349,7 +349,7 @@ def xdmat_script(batch,
                 "--rej {} --nproc 32 ".format(reject) +
                 "--fid-Om {} --fid-Or {}\n".format(fid_om, fid_or))
         batch_filename = out_dir + "/" + out.replace(".fits", ".batch")
-        batch.xdmat_script_list.append(basename(batch_filename))
+        batch.xdmat_script.append(basename(batch_filename))
 
         file = open(batch_filename, "w")
         file.write(srun)
@@ -509,9 +509,9 @@ def submit(batch):
         file.write(("picca_deltas=$(sbatch --parsable "
                     "{})\n").format(batch.picca_deltas_script_filename))
         file.write('echo "picca_deltas: "$picca_deltas\n')
-    for cf_batch, dmat_batch, exp_batch in zip(batch.cf_script_list,
-                                               batch.dmat_script_list,
-                                               batch.export_script_list):
+    for cf_batch, dmat_batch, exp_batch in zip(batch.cf_script,
+                                               batch.dmat_script,
+                                               batch.export_script):
         var_cf = cf_batch.replace(".batch", "").replace(".", "_")
         var_dmat = dmat_batch.replace(".batch", "").replace(".", "_")
         if batch.picca_deltas_script_filename is not None:
@@ -536,9 +536,9 @@ def submit(batch):
                     "{})\n").format(var_exp, var_cf, var_dmat, exp_batch))
         file.write('echo "{0}: "${0} \n'.format(var_exp))
 
-    for xcf_batch, xdmat_batch, xexp_batch in zip(batch.xcf_script_list,
-                                                  batch.xdmat_script_list,
-                                                  batch.xexport_script_list):
+    for xcf_batch, xdmat_batch, xexp_batch in zip(batch.xcf_script,
+                                                  batch.xdmat_script,
+                                                  batch.xexport_script):
         var_xcf = xcf_batch.replace(".batch", "").replace(".", "_")
         var_xdmat = xdmat_batch.replace(".batch", "").replace(".", "_")
         if batch.picca_deltas_script_filename is not None:
@@ -684,7 +684,7 @@ def main():
                   args.zint,
                   args.out_dir,
                   email=args.email,
-                  fid_om=args.fid_om,
+                  fid_om=args.fid_Om,
                   fid_pk=args.fid_Pk,
                   fid_or=args.fid_Or)
 
@@ -696,7 +696,7 @@ def main():
                     args.zint,
                     args.out_dir,
                     email=args.email,
-                    fid_om=args.fid_om,
+                    fid_om=args.fid_Om,
                     fid_or=args.fid_Or)
 
     if "xcf" in args.to_do:
@@ -709,7 +709,7 @@ def main():
                    args.zint,
                    args.out_dir,
                    email=args.email,
-                   fid_om=args.fid_om,
+                   fid_om=args.fid_Om,
                    fid_pk=args.fid_Pk,
                    fid_or=args.fid_Or)
 
@@ -722,7 +722,7 @@ def main():
                      args.zint,
                      args.out_dir,
                      email=args.email,
-                     fid_om=args.fid_om,
+                     fid_om=args.fid_Om,
                      fid_or=args.fid_Or)
 
     time = "02:00:00"
